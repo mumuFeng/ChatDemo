@@ -14,12 +14,21 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVObject;
-
+/*import com.avos.avoscloud.im.v2.AVIMClient;
+/*import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;*/
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.example.infocenter.chatdemo.App;
 import com.example.infocenter.chatdemo.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
     private EditText etNAME;
     private EditText etPSW;
     private Button btLOGIN;
+    private Button btMuChat;
+    private Button btLChat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +48,8 @@ public class MainActivity extends ActionBarActivity {
         btLOGIN = (Button)findViewById(R.id.btLogin);
         etNAME = (EditText)findViewById(R.id.etName);
         etPSW = (EditText)findViewById(R.id.etPsw);
+        btMuChat = (Button)findViewById(R.id.MToL);
+        btLChat = (Button)findViewById(R.id.LToM);
 
         btTOCHAT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,10 +77,86 @@ public class MainActivity extends ActionBarActivity {
                         } else {
                             Log.d("失败", "查询错误: " + e.getMessage());
                             Toast.makeText(MainActivity.this,"用户不存在",Toast.LENGTH_LONG).show();
-
                         }
                     }
                 });
+
+            }
+        });
+
+        /*我是mumu,这里进入我的聊天界面，我去找ljj聊天*/
+        btMuChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*登陆对话初始化*/
+                final AVIMClient imClient = AVIMClient.getInstance("mumu");
+                imClient.open(new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVException e) {
+                        if (null != e) {
+                            // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
+                            // 此时聊天服务不可用。
+                            e.printStackTrace();
+                        } else {
+                            // 成功登录，可以开始进行聊天了（假设为 MainActivity）。
+                            List<String> clientIds = new ArrayList<String>();
+                            clientIds.add("mumu");
+                            clientIds.add("ljj");
+                            // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
+                            // 常量定义：
+                            // int ConversationType_OneOne = 0; // 两个人之间的单聊
+                            // int ConversationType_Group = 1;  // 多人之间的群聊
+                            Map<String, Object> attr = new HashMap<String, Object>();
+                            attr.put("type", 0);
+
+                            imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+                                @Override
+                                public void done(AVIMConversation conversation, AVException e) {
+                                    if (null != conversation) {
+                                        // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
+                                        Intent intent = new Intent(MainActivity.this, ChatMain.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("conversation",conversation.getClass());
+                                        bundle.putParcelable("dd",conversation);
+                                        Intent.putExtra(bundle);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+
+
+                        };
+                    }
+                });
+/*
+                List<String> clientIds = new ArrayList<String>();
+                clientIds.add("Tom");
+                clientIds.add("Bob");
+                // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
+                // 常量定义：
+                // int ConversationType_OneOne = 0; // 两个人之间的单聊
+                // int ConversationType_Group = 1;  // 多人之间的群聊
+                Map<String, Object> attr = new HashMap<String, Object>();
+                attr.put("type", 0);
+
+                imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+                    @Override
+                    public void done(AVIMConversation conversation, AVException e) {
+                        if (null != conversation) {
+                            // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
+                            Intent intent = new Intent(MainActivity.this, ChatMain.class);
+                            Intent.putExtra("conversation", conversation);
+                            startActivity(intent);
+                        }
+                    }
+                });*/
+            }
+        });
+
+        /*我是ljj,这里是我的聊天界面，我去找木木聊天*/
+        btLChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
