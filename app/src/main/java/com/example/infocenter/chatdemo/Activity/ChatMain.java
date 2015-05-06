@@ -17,6 +17,8 @@ import android.widget.*;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
+import com.example.infocenter.chatdemo.Entities.User;
 import com.example.infocenter.chatdemo.R;
 
 public class ChatMain extends ActionBarActivity {
@@ -47,6 +49,13 @@ public class ChatMain extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+
+/*      *利用json的方法传递没有继承序列化接口的对象，这里是接受端*
+        String msg = getIntent().getExtras().getString("as");
+        User u = JSON.parseObject(msg,User.class);
+        Toast.makeText(ChatMain.this,u.getName(),Toast.LENGTH_LONG).show();*/
+
+
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_chat_main);
         chatList=new ArrayList<HashMap<String,Object>>();

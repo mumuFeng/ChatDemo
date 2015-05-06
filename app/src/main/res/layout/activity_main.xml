@@ -33,11 +33,26 @@
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="60px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/MToL"
+                android:text="我是mumu,chat to ljj"/>
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="120px"
+                android:id="@+id/LToM"
+                android:text="i am ljj"/>
+        </LinearLayout>>
     <Button
-        android:layout_marginTop="600px"
+        android:layout_marginTop="60px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="进入聊天"
+        android:text="进入测试聊天设计页面"
         android:id="@+id/btToChat"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"

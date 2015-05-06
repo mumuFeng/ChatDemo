@@ -11,20 +11,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVObject;
-/*import com.avos.avoscloud.im.v2.AVIMClient;
-/*import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;*/
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.example.infocenter.chatdemo.App;
+import com.example.infocenter.chatdemo.Entities.User;
+import com.example.infocenter.chatdemo.Helper.MessageHandler;
 import com.example.infocenter.chatdemo.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
                 final AVIMClient imClient = AVIMClient.getInstance("mumu");
                 imClient.open(new AVIMClientCallback() {
                     @Override
-                    public void done(AVIMClient avimClient, AVException e) {
+                    public void done(final AVIMClient avimClient, AVException e) {
                         if (null != e) {
                             // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
                             // 此时聊天服务不可用。
@@ -114,11 +117,40 @@ public class MainActivity extends ActionBarActivity {
                                 public void done(AVIMConversation conversation, AVException e) {
                                     if (null != conversation) {
                                         // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
+
+                                         //发送消息
+                                        final AVIMMessage message = new AVIMMessage();
+                                        message.setContent("hello");
+                                        String msgid = message.getMessageId();
+                                        conversation.sendMessage(message, new AVIMConversationCallback() {
+                                            @Override
+                                            public void done(AVException e) {
+                                                if (null != e) {
+                                                    // 出错了。。。
+                                                    e.printStackTrace();
+                                                } else {
+                                                    Log.d("success","发送成功，msgId=" + message.getMessageId());
+                                                }
+                                            }
+                                        });
+                                        Log.d("success",message.getContent());
+                                        avimClient.close(new AVIMClientCallback() {
+                                            @Override
+                                            public void done(AVIMClient avimClient, AVException e) {
+                                            }
+                                        });
+                                        //接受消息
+
+
                                         Intent intent = new Intent(MainActivity.this, ChatMain.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putSerializable("conversation",conversation.getClass());
-                                        bundle.putParcelable("dd",conversation);
-                                        Intent.putExtra(bundle);
+                                        intent.putExtra("conversation", JSON.toJSONString(conversation));
+
+                            /*       ******利用json的方法传递没有继承序列化接口的对象，这里的发送端
+                                        User u =new User();
+                                        u.setName("mumu");
+                                        u.setPsw("123");
+                                        intent.putExtra("as",JSON.toJSONString(u));*/
+
                                         startActivity(intent);
                                     }
                                 }
@@ -158,6 +190,21 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
+                //接收mumu发送过来的消息
+                final AVIMClient imClientL = AVIMClient.getInstance("ljj");
+                imClientL.open(new AVIMClientCallback(){
+                    @Override
+                    public void done(AVIMClient client, AVException e) {
+                        if (null != e) {
+                            // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
+                            // 此时聊天服务不可用。
+                            e.printStackTrace();
+                        } else {
+                            // 成功登录，可以开始进行聊天了。
+                            Toast.makeText(MainActivity.this,"我是jj登陆成功",Toast.LENGTH_SHORT).show();
+                        };
+                    }
+                });
             }
         });
     }
@@ -184,4 +231,6 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
