@@ -34,17 +34,20 @@
             android:name=".Activity.ChatMain"
             android:label="@string/title_activity_chat_main" >
         </activity>
-
         //聊天功能，加入的代码
         <service android:name="com.avos.avoscloud.PushService" />
 
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".Activity.ChatMainMuMu"
+            android:label="@string/title_activity_chat_main_mu_mu" >
+        </activity>
     </application>
 
 </manifest>

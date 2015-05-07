@@ -105,10 +105,7 @@ public class MainActivity extends ActionBarActivity {
                         } else {
                             // 成功登录，可以开始进行聊天了（假设为 MainActivity）。
                             List<String> clientIds = new ArrayList<String>();
-                            clientIds.add("zy");
-                            clientIds.add("lq");
-                            clientIds.add("mumu");
-                            clientIds.add("zyh");
+                            clientIds.add("yangyang");
 
 
                             // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
@@ -122,9 +119,10 @@ public class MainActivity extends ActionBarActivity {
                                 @Override
                                 public void done(AVIMConversation conversation, AVException e) {
                                     if (null != conversation) {
-                                        // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
 
-                                         //发送消息
+                                        // 成功了，这时候可以显示对话的 Activity 页面（ChatMainMuMu）了
+
+                                        /*//发送消息
                                         final AVIMMessage message = new AVIMMessage();
                                         message.setContent("lq.你知道我在等你吗");
                                         String msgid = message.getMessageId();
@@ -139,20 +137,20 @@ public class MainActivity extends ActionBarActivity {
                                                 }
                                             }
                                         });
-                                        Log.d("success",message.getContent());
+                                        Log.d("success",message.getContent());*/
                                         //接受消息
 
-
-                                        Intent intent = new Intent(MainActivity.this, ChatMain.class);
+                                        Intent intent = new Intent(MainActivity.this, ChatMainMuMu.class);
+                                        //将所创建的conversation传递到会话界面，用以发送消息
                                         intent.putExtra("conversation", JSON.toJSONString(conversation));
 
-                            /*       ******利用json的方法传递没有继承序列化接口的对象，这里的发送端
+                                        /*利用json的方法传递没有继承序列化接口的对象，这里的发送端
                                         User u =new User();
                                         u.setName("mumu");
                                         u.setPsw("123");
                                         intent.putExtra("as",JSON.toJSONString(u));*/
 
-                                        //startActivity(intent);
+                                        startActivity(intent);
                                     }
                                 }
                             });
@@ -197,7 +195,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 //接收mumu发送过来的消息
-                final AVIMClient imClientL = AVIMClient.getInstance("zy");
+                final AVIMClient imClientL = AVIMClient.getInstance("lq");
                 imClientL.open(new AVIMClientCallback(){
                     @Override
                     public void done(AVIMClient client, AVException e) {

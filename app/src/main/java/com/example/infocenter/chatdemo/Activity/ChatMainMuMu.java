@@ -2,6 +2,7 @@ package com.example.infocenter.chatdemo.Activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,13 +19,21 @@ import android.widget.*;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVMessage;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.Conversation;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.example.infocenter.chatdemo.Entities.User;
 import com.example.infocenter.chatdemo.R;
 
-public class ChatMain extends ActionBarActivity {
+public class ChatMainMuMu extends ActionBarActivity {
 
-/*--------------------------------*/
+    /*--------------------------------*/
+
     ArrayList<HashMap<String,Object>> chatList=null;
+    AVIMMessage message = new AVIMMessage();
     String[] from={"image","text"};
     int[] to={R.id.chatlist_image_me,R.id.chatlist_text_me,R.id.chatlist_image_other,R.id.chatlist_text_other};
     int[] layout={R.layout.chat_me,R.layout.chat_he};
@@ -50,24 +59,29 @@ public class ChatMain extends ActionBarActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
-        /*利用json的方法传递没有继承序列化接口的对象，这里是接受端*
+        /* *利用json的方法传递没有继承序列化接口的对象，这里是接受端*
         String msg = getIntent().getExtras().getString("as");
         User u = JSON.parseObject(msg,User.class);
         Toast.makeText(ChatMain.this,u.getName(),Toast.LENGTH_LONG).show();*/
 
+        /**获取传递过来的会话conversation用以发送消息**/
+        String msg = getIntent().getExtras().getString("conversation");
+        final AVIMConversation conversation = JSON.parseObject(msg,AVIMConversation.class);
+
+
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_chat_main);
+        setContentView(R.layout.activity_chat_main_mu_mu);
         chatList=new ArrayList<HashMap<String,Object>>();
         addTextToList("你是哪个", ME);
         addTextToList("你猜呢？\n  ^_^", OTHER);
         addTextToList("爱说不说", ME);
         addTextToList("那就不说，拜拜！", OTHER);
 
-        chatSendButton=(Button)findViewById(R.id.chat_bottom_sendbutton);
-        editText=(EditText)findViewById(R.id.chat_bottom_edittext);
-        chatListView=(ListView)findViewById(R.id.chat_list);
+        chatSendButton=(Button)findViewById(R.id.chat_bottom_sendbutton);//发送消息按钮
+        editText=(EditText)findViewById(R.id.chat_bottom_edittext);//消息编辑框
+        chatListView=(ListView)findViewById(R.id.chat_list);//聊天记录显示界面（正中间最大哪一块）
 
-        adapter=new MyChatAdapter(this,chatList,layout,from,to);
+        adapter=new MyChatAdapter(this,chatList,layout,from,to);//界面适配器??????
 
 
         chatSendButton.setOnClickListener(new OnClickListener() {
@@ -87,12 +101,28 @@ public class ChatMain extends ActionBarActivity {
                 if(myWord.length()==0)
                     return;
                 editText.setText("");
-                addTextToList(myWord, ME);
+                //发送消息到服务器
+                message.setContent(myWord);
+                conversation.sendMessage(message,new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (null != e) {
+                            // 出错了。。。
+                            Toast.makeText(ChatMainMuMu.this,"消息发送失败···",Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        } else {
+                            Log.d("success", "发送成功，消息内容：" + message.getContent());
+
+                            addTextToList(myWord, ME);//
+                        }
+                    }
+                });
+
                 /**
                  * 更新数据列表，并且通过setSelection方法使ListView始终滚动在最底端
                  */
-                adapter.notifyDataSetChanged();
-                chatListView.setSelection(chatList.size()-1);
+                adapter.notifyDataSetChanged();//??????
+                chatListView.setSelection(chatList.size()-1);//???????
 
             }
         });
