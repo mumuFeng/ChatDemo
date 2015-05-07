@@ -16,12 +16,11 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        System.out.print("123");
         AVOSCloud.initialize(this, "y91t28zzeqf035ugwjbr910pandf48dso3rn2aoesj0jq0gt", "myelg4szmkpr6azwg68cyw2txsgjth05x5otcd5jzgwz2nzo");
         AVIMMessageManager.registerDefaultMessageHandler(new MessageHandler());
-        AVObject testObject = new AVObject("TT");
-        testObject.put("tttttttttt", "bttttttttttttttttar");
-        testObject.saveInBackground();
+        //AVObject testObject = new AVObject("TT");
+       // testObject.put("tttttttttt", "bttttttttttttttttar");
+       // testObject.saveInBackground();
     }
 
     public static boolean tt(){

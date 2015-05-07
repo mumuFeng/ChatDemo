@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -92,7 +93,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 /*登陆对话初始化*/
-                final AVIMClient imClient = AVIMClient.getInstance("mumu");
+                 final AVIMClient imClient = AVIMClient.getInstance("mumu");
+                AVIMMessageManager.registerDefaultMessageHandler(new MessageHandler());
                 imClient.open(new AVIMClientCallback() {
                     @Override
                     public void done(final AVIMClient avimClient, AVException e) {
@@ -103,8 +105,12 @@ public class MainActivity extends ActionBarActivity {
                         } else {
                             // 成功登录，可以开始进行聊天了（假设为 MainActivity）。
                             List<String> clientIds = new ArrayList<String>();
+                            clientIds.add("zy");
+                            clientIds.add("lq");
                             clientIds.add("mumu");
-                            clientIds.add("ljj");
+                            clientIds.add("zyh");
+
+
                             // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
                             // 常量定义：
                             // int ConversationType_OneOne = 0; // 两个人之间的单聊
@@ -120,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
 
                                          //发送消息
                                         final AVIMMessage message = new AVIMMessage();
-                                        message.setContent("hello");
+                                        message.setContent("lq.你知道我在等你吗");
                                         String msgid = message.getMessageId();
                                         conversation.sendMessage(message, new AVIMConversationCallback() {
                                             @Override
@@ -134,11 +140,6 @@ public class MainActivity extends ActionBarActivity {
                                             }
                                         });
                                         Log.d("success",message.getContent());
-                                        avimClient.close(new AVIMClientCallback() {
-                                            @Override
-                                            public void done(AVIMClient avimClient, AVException e) {
-                                            }
-                                        });
                                         //接受消息
 
 
@@ -151,11 +152,16 @@ public class MainActivity extends ActionBarActivity {
                                         u.setPsw("123");
                                         intent.putExtra("as",JSON.toJSONString(u));*/
 
-                                        startActivity(intent);
+                                        //startActivity(intent);
                                     }
                                 }
                             });
+/*                            imClient.close(new AVIMClientCallback() {
+                                @Override
+                                public void done(AVIMClient avimClient, AVException e) {
 
+                                }
+                            });*/
 
                         };
                     }
@@ -191,7 +197,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 //接收mumu发送过来的消息
-                final AVIMClient imClientL = AVIMClient.getInstance("ljj");
+                final AVIMClient imClientL = AVIMClient.getInstance("zy");
                 imClientL.open(new AVIMClientCallback(){
                     @Override
                     public void done(AVIMClient client, AVException e) {
@@ -203,8 +209,16 @@ public class MainActivity extends ActionBarActivity {
                             // 成功登录，可以开始进行聊天了。
                             Toast.makeText(MainActivity.this,"我是jj登陆成功",Toast.LENGTH_SHORT).show();
                         };
+
                     }
+
                 });
+                /*imClientL.close(new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVException e) {
+
+                    }
+                });*/
             }
         });
     }
