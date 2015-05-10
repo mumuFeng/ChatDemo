@@ -48,6 +48,10 @@
             android:name=".Activity.ChatMainMuMu"
             android:label="@string/title_activity_chat_main_mu_mu" >
         </activity>
+        <activity
+            android:name=".Activity.ChatMainYangYang"
+            android:label="@string/title_activity_chat_main_yang_yang" >
+        </activity>
     </application>
 
 </manifest>

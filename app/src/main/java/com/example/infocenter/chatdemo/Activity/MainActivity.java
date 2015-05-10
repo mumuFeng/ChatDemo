@@ -43,6 +43,7 @@ public class MainActivity extends ActionBarActivity {
     private Button btLOGIN;
     private Button btMuChat;
     private Button btLChat;
+    private AVIMClient cl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,13 @@ public class MainActivity extends ActionBarActivity {
                 String name = etNAME.getText().toString();
                 String psw = etPSW.getText().toString();
 
+
+                cl.close(new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVException e) {
+                    }
+                });
+                cl=null;
                 /*处理登陆*/
                 AVQuery<AVObject> query = new AVQuery<AVObject>("_User");
                 query.whereEqualTo("username", name);
@@ -93,9 +101,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 /*登陆对话初始化*/
-                 final AVIMClient imClient = AVIMClient.getInstance("mumu");
+                cl = AVIMClient.getInstance("lq");
                 AVIMMessageManager.registerDefaultMessageHandler(new MessageHandler());
-                imClient.open(new AVIMClientCallback() {
+                cl.open(new AVIMClientCallback() {
                     @Override
                     public void done(final AVIMClient avimClient, AVException e) {
                         if (null != e) {
@@ -105,7 +113,8 @@ public class MainActivity extends ActionBarActivity {
                         } else {
                             // 成功登录，可以开始进行聊天了（假设为 MainActivity）。
                             List<String> clientIds = new ArrayList<String>();
-                            clientIds.add("yangyang");
+                            clientIds.add("mumu");
+                            clientIds.add("lq");
 
 
                             // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
@@ -115,16 +124,16 @@ public class MainActivity extends ActionBarActivity {
                             Map<String, Object> attr = new HashMap<String, Object>();
                             attr.put("type", 0);
 
-                            imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+                            cl.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
                                 @Override
                                 public void done(AVIMConversation conversation, AVException e) {
                                     if (null != conversation) {
 
                                         // 成功了，这时候可以显示对话的 Activity 页面（ChatMainMuMu）了
 
-                                        /*//发送消息
+                                        //发送消息
                                         final AVIMMessage message = new AVIMMessage();
-                                        message.setContent("lq.你知道我在等你吗");
+                                        message.setContent("你是傻逼吗");
                                         String msgid = message.getMessageId();
                                         conversation.sendMessage(message, new AVIMConversationCallback() {
                                             @Override
@@ -137,13 +146,12 @@ public class MainActivity extends ActionBarActivity {
                                                 }
                                             }
                                         });
-                                        Log.d("success",message.getContent());*/
+                                        Log.d("success",message.getContent());
                                         //接受消息
 
                                         Intent intent = new Intent(MainActivity.this, ChatMainMuMu.class);
                                         //将所创建的conversation传递到会话界面，用以发送消息
-                                        intent.putExtra("conversation", JSON.toJSONString(conversation));
-
+                                        //intent.putExtra("conversation", JSON.toJSONString(conversation));
                                         /*利用json的方法传递没有继承序列化接口的对象，这里的发送端
                                         User u =new User();
                                         u.setName("mumu");
@@ -195,8 +203,9 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
 
                 //接收mumu发送过来的消息
-                final AVIMClient imClientL = AVIMClient.getInstance("lq");
-                imClientL.open(new AVIMClientCallback(){
+                cl = AVIMClient.getInstance("mumu");
+                AVIMMessageManager.registerDefaultMessageHandler(new MessageHandler());
+                cl.open(new AVIMClientCallback() {
                     @Override
                     public void done(AVIMClient client, AVException e) {
                         if (null != e) {
@@ -204,20 +213,68 @@ public class MainActivity extends ActionBarActivity {
                             // 此时聊天服务不可用。
                             e.printStackTrace();
                         } else {
-                            // 成功登录，可以开始进行聊天了。
-                            Toast.makeText(MainActivity.this,"我是jj登陆成功",Toast.LENGTH_SHORT).show();
-                        };
+                            // 成功登录，可以开始进行聊天了（假设为 MainActivity）。
+                            List<String> clientIds = new ArrayList<String>();
+                            clientIds.add("mumu");
 
+
+                            // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
+                            // 常量定义：
+                            // int ConversationType_OneOne = 0; // 两个人之间的单聊
+                            // int ConversationType_Group = 1;  // 多人之间的群聊
+                            Map<String, Object> attr = new HashMap<String, Object>();
+                           attr.put("type", 0);
+
+/*
+                            imClientL.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+                                @Override
+                                public void done(AVIMConversation conversation, AVException e) {
+                                    if (null != conversation) {
+
+                                        // 成功了，这时候可以显示对话的 Activity 页面（ChatMainMuMu）了
+
+                                        */
+/*//*
+/发送消息
+                                        final AVIMMessage message = new AVIMMessage();
+                                        message.setContent("lq.你知道我在等你吗");
+                                        String msgid = message.getMessageId();
+                                        conversation.sendMessage(message, new AVIMConversationCallback() {
+                                            @Override
+                                            public void done(AVException e) {
+                                                if (null != e) {
+                                                    // 出错了。。。
+                                                    e.printStackTrace();
+                                                } else {
+                                                    Log.d("success","发送成功，msgId=" + message.getMessageId());
+                                                }
+                                            }
+                                        });
+                                        Log.d("success",message.getContent());*//*
+
+                                        //接受消息
+
+                                        Intent intent = new Intent(MainActivity.this, ChatMainMuMu.class);
+                                        //将所创建的conversation传递到会话界面，用以发送消息
+                                        //intent.putExtra("conversation", JSON.toJSONString(conversation));
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+*/
+
+                        }
                     }
-
                 });
+
+            }
                 /*imClientL.close(new AVIMClientCallback() {
                     @Override
                     public void done(AVIMClient avimClient, AVException e) {
 
                     }
                 });*/
-            }
+
         });
     }
 

@@ -7,5 +7,6 @@
     <string name="title_activity_test">test</string>
     <string name="title_activity_chat_main">ChatMain</string>
     <string name="title_activity_chat_main_mu_mu">ChatMainMuMu</string>
+    <string name="title_activity_chat_main_yang_yang">ChatMainYangYang</string>
 
 </resources>

@@ -65,8 +65,8 @@ public class ChatMainMuMu extends ActionBarActivity {
         Toast.makeText(ChatMain.this,u.getName(),Toast.LENGTH_LONG).show();*/
 
         /**获取传递过来的会话conversation用以发送消息**/
-        String msg = getIntent().getExtras().getString("conversation");
-        final AVIMConversation conversation = JSON.parseObject(msg,AVIMConversation.class);
+        //String msg = getIntent().getExtras().getString("conversation");
+       // final AVIMConversation conversation = JSON.parseObject(msg,AVIMConversation.class);
 
 
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -89,7 +89,7 @@ public class ChatMainMuMu extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                String myWord=null;
+                //String myWord=null;
 
                 /**
                  * 这是一个发送消息的监听器，注意如果文本框中没有内容，那么getText()的返回值可能为
@@ -97,13 +97,14 @@ public class ChatMainMuMu extends ActionBarActivity {
                  * ，并且不能发送空消息。
                  */
 
-                myWord=(editText.getText()+"").toString();
+                final String myWord=(editText.getText()+"").toString();
+
                 if(myWord.length()==0)
                     return;
                 editText.setText("");
                 //发送消息到服务器
                 message.setContent(myWord);
-                conversation.sendMessage(message,new AVIMConversationCallback() {
+        /*        conversation.sendMessage(message,new AVIMConversationCallback() {
                     @Override
                     public void done(AVException e) {
                         if (null != e) {
@@ -116,7 +117,7 @@ public class ChatMainMuMu extends ActionBarActivity {
                             addTextToList(myWord, ME);//
                         }
                     }
-                });
+                });*/
 
                 /**
                  * 更新数据列表，并且通过setSelection方法使ListView始终滚动在最底端

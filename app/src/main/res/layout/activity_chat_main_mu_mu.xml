@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="信息中心主任（备注：左哥）"
+            android:text="杨杨（备注：妹妹）"
             android:textSize="8pt"
             android:textColor="@android:color/white"
             android:gravity="center"
