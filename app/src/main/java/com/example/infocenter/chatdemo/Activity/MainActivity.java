@@ -1,5 +1,6 @@
 package com.example.infocenter.chatdemo.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -49,6 +50,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         App.tt();
+
+        Context context =this;
+        String contextString = context.toString();
+        String Aname = contextString.substring(contextString.lastIndexOf(".") + 1, contextString.indexOf("@"));
+        Toast.makeText(MainActivity.this,Aname,Toast.LENGTH_LONG).show();
+
         btTOCHAT = (Button) findViewById(R.id.btToChat);
         btLOGIN = (Button) findViewById(R.id.btLogin);
         etNAME = (EditText) findViewById(R.id.etName);
